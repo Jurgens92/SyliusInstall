@@ -77,6 +77,11 @@ print_section "Installing Nginx"
 sudo apt install -y nginx
 check_command "Nginx installation"
 
+# Remove default Nginx configuration
+print_section "Removing Default Nginx Configuration"
+sudo rm -f /etc/nginx/sites-enabled/default
+check_command "Default Nginx config removal"
+
 # Create Sylius project
 print_section "Creating Sylius Project"
 cd /var/www
@@ -154,6 +159,23 @@ check_command "Database migration"
 php bin/console sylius:fixtures:load --no-interaction
 check_command "Fixtures loading"
 
+# Verify Nginx configuration and restart
+print_section "Verifying Nginx Configuration"
+sudo nginx -t
+sudo systemctl restart nginx
+check_command "Nginx verification"
+
+# Check public directory permissions
+print_section "Verifying Public Directory"
+ls -l $PROJECT_PATH/public/
+check_command "Public directory verification"
+
+# Display Nginx logs if there are any errors
+if [ -f /var/log/nginx/error.log ]; then
+   echo "Recent Nginx error logs:"
+   sudo tail -n 20 /var/log/nginx/error.log
+fi
+
 print_section "Installation Complete!"
 echo "Your Sylius installation is available at: http://$DOMAIN"
 echo "Admin panel: http://$DOMAIN/admin"
@@ -163,3 +185,15 @@ echo "Password: sylius"
 echo ""
 echo "Please change the admin credentials after logging in!"
 echo "Don't forget to set up SSL/HTTPS for production use."
+
+# Final checks
+echo ""
+echo "Final Configuration Checks:"
+echo "1. Nginx sites-enabled directory contents:"
+ls -l /etc/nginx/sites-enabled/
+echo ""
+echo "2. PHP-FPM status:"
+sudo systemctl status php8.2-fpm | grep Active
+echo ""
+echo "3. Nginx status:"
+sudo systemctl status nginx | grep Active
