@@ -13,22 +13,32 @@ Sample data loading
 ## Prerequisites
 
 Ubuntu 24.04 server
+
 Root or sudo access
+
 Clean system (fresh installation recommended)
+
 
 ## Installation
 
 Clone this repository:
+
 git clone https://github.com/Jurgens92/SyliusInstall.git
+
 cd syliusinstall
 
 ## Edit the configuration variables in setup.sh:
 
 PROJECT_NAME="my-sylius-project"
+
 PROJECT_PATH="/var/www/$PROJECT_NAME"
+
 DOMAIN="your-domain.com"
+
 DB_USER="sylius"
+
 DB_PASSWORD="your_password"
+
 DB_NAME="sylius"
 
 ## Make the script executable:
